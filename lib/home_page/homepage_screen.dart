@@ -78,6 +78,7 @@ class _MainScreenState extends State<MainScreen> {
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   SizedBox(
+                    // width: showTasks ? 150: 100,
                     width: 125,
                     child: ElevatedButton(
                       onPressed: !showTasks ? (){
@@ -93,14 +94,21 @@ class _MainScreenState extends State<MainScreen> {
                             bottomLeft: Radius.circular(12),
                             bottomRight: Radius.zero,
                           )
-                        )
+                        ),
+                        disabledBackgroundColor: const Color.fromARGB(222, 0, 0, 0),
+                        disabledForegroundColor: Colors.white,
+                        foregroundColor: Colors.black
                       ),
                       child: Text(
-                        "Tasks"
+                        "Tasks",
+                        // style: TextStyle(
+                        //   fontSize: showTasks ? 16: 12
+                        // ),
                       )
                       ),
                   ),
                   SizedBox(
+                    // width: !showTasks ? 150: 100,
                     width: 125,
                     child: ElevatedButton(
                       onPressed: showTasks ? (){
@@ -117,10 +125,16 @@ class _MainScreenState extends State<MainScreen> {
                             bottomLeft: Radius.zero,
                             bottomRight: Radius.circular(12),
                           )
-                        )
+                        ),
+                        disabledBackgroundColor: const Color.fromARGB(222, 0, 0, 0),
+                        disabledForegroundColor: Colors.white,
+                        foregroundColor: Colors.black
                       ),
                       child: Text(
-                        "Complete"
+                        "Complete",
+                        // style: TextStyle(
+                        //   fontSize: !showTasks ? 16: 10
+                        // ),
                       )),
                   ),
                 ],
@@ -141,7 +155,7 @@ class _MainScreenState extends State<MainScreen> {
                 ),
               ),
               Padding(
-                padding: const EdgeInsets.fromLTRB(10, 0, 10, 4),
+                padding: const EdgeInsets.fromLTRB(20, 0, 20, 4),
                 child: Row(
                   children: [
                     Container(
@@ -186,7 +200,7 @@ class _MainScreenState extends State<MainScreen> {
                       ),
                     ),
                     Padding(
-                      padding: const EdgeInsets.fromLTRB(10, 0, 5, 0),
+                      padding: const EdgeInsets.fromLTRB(10, 0, 0, 0),
                       child: SizedBox(
                         width: 45,
                         height: 45,
@@ -198,7 +212,7 @@ class _MainScreenState extends State<MainScreen> {
                               padding: EdgeInsets.zero),
                           onPressed: (){
                             String textFieldContent = myController.text.trim();
-
+                    
                             if (textFieldContent != ""){
                               addTaskToTasks(textFieldContent, selectedLevel);
                               myController.clear();
