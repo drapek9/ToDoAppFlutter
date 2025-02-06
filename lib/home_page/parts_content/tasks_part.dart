@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:to_to_apka/structures/task_logic.dart';
 
 class TasksPart extends StatefulWidget {
-  // const TasksPart({super.key});
 
-  final List dataTasks;
+  final List<Task> dataTasks;
 
   TasksPart({required this.dataTasks});
 
@@ -16,7 +16,6 @@ class _TasksPartState extends State<TasksPart> {
 
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
     dataTasks = widget.dataTasks;
   }

@@ -28,10 +28,15 @@ class _LoadingScreenState extends State<LoadingScreen> {
       Task(taskName: "Cook dinner for your parent", level: 6),
       Task(taskName: "Call your grandparents", level: 3),
       ];
-
-      Navigator.pushNamed(context, "/home", arguments: {
-        "tasks": data
-      });
+    
+    List<CompleteTask> dataComplete = [
+      CompleteTask(taskName: "Začít projekt ve flutter"),
+      CompleteTask(taskName: "Zkontrolovat google cloud console"),
+    ];
+    Navigator.pushNamed(context, "/home", arguments: {
+      "tasks": data,
+      "complete_tasks": dataComplete
+    });
     
   }
 

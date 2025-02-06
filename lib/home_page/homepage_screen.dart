@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-// import 'package:flutter/services.dart';
 import 'package:to_to_apka/home_page/parts_content/tasks_part.dart';
 import 'package:to_to_apka/home_page/parts_content/complete_part.dart';
+import 'package:to_to_apka/structures/task_logic.dart';
 
 class MainScreen extends StatefulWidget {
   const MainScreen({super.key});
@@ -12,14 +12,24 @@ class MainScreen extends StatefulWidget {
 
 class _MainScreenState extends State<MainScreen> {
 
-  List tasks = [];
+  List<Task> tasks = [];
+  List<CompleteTask> tasksComplete = [];
   bool showTasks = true;
+
+  TextEditingController myController = TextEditingController();
+
+  void addTaskToTasks(taskName, level){
+    setState(() {
+      tasks.add(Task(level: level, taskName: taskName));
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
 
     Map data = ModalRoute.of(context)?.settings.arguments as Map<dynamic, dynamic>;
     tasks = data["tasks"];
+    tasksComplete = data["complete_tasks"];
 
     return Scaffold(
       backgroundColor: Colors.blue,
@@ -85,7 +95,7 @@ class _MainScreenState extends State<MainScreen> {
                   children: [
                     TasksPart(
                       dataTasks: tasks),
-                    CompletePart()],
+                    CompletePart(dataCompleteTasks: tasksComplete,)],
                 ),
               ),
               Padding(
@@ -94,6 +104,7 @@ class _MainScreenState extends State<MainScreen> {
                   children: [
                     Expanded(
                       child: TextField(
+                        controller: myController,
                         cursorColor: Colors.black,
                         maxLines: null,
                         decoration: InputDecoration(
@@ -114,7 +125,14 @@ class _MainScreenState extends State<MainScreen> {
                                 borderRadius: BorderRadius.circular(200), // Kulaté tlačítko
                               ),
                               padding: EdgeInsets.zero),
-                          onPressed: (){},
+                          onPressed: (){
+                            String textFieldContent = myController.text.trim();
+
+                            if (textFieldContent != ""){
+                              addTaskToTasks(textFieldContent, 10);
+                              myController.clear();
+                            }
+                          },
                           child: Icon(
                             Icons.add,
                             color: Colors.black,)),

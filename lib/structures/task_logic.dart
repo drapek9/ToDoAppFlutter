@@ -6,6 +6,8 @@ class Task {
 
 }
 
-// class CompleteTask {
-//   String taskName;
-// }
+class CompleteTask {
+  String taskName;
+
+  CompleteTask({required this.taskName});
+}
