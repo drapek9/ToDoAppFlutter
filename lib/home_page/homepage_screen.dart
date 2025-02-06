@@ -15,6 +15,7 @@ class _MainScreenState extends State<MainScreen> {
   List<Task> tasks = [];
   List<CompleteTask> tasksComplete = [];
   bool showTasks = true;
+  int lengthAddText = 0;
 
   TextEditingController myController = TextEditingController();
 
@@ -27,9 +28,31 @@ class _MainScreenState extends State<MainScreen> {
   @override
   Widget build(BuildContext context) {
 
+    myController.addListener((){
+      setState(() {
+        lengthAddText = myController.text.length;
+      });
+      
+    });
+
     Map data = ModalRoute.of(context)?.settings.arguments as Map<dynamic, dynamic>;
     tasks = data["tasks"];
     tasksComplete = data["complete_tasks"];
+
+    void deleteTask (Task theTask){
+      setState(() {
+        tasks.remove(theTask);
+      });
+      
+    }
+
+    void completedTask (Task theTask){
+      CompleteTask newCompleteTask = CompleteTask(taskName: theTask.taskName);
+      setState(() {
+        tasksComplete.add(newCompleteTask);
+      });
+      deleteTask(theTask);
+    }
 
     return Scaffold(
       backgroundColor: Colors.blue,
@@ -94,8 +117,12 @@ class _MainScreenState extends State<MainScreen> {
                   index: showTasks ? 0 : 1,
                   children: [
                     TasksPart(
-                      dataTasks: tasks),
-                    CompletePart(dataCompleteTasks: tasksComplete,)],
+                      dataTasks: tasks,
+                      deleteFunction: deleteTask,
+                      completedFunction: completedTask),
+                    CompletePart(
+                      dataCompleteTasks: tasksComplete,
+                      )],
                 ),
               ),
               Padding(
@@ -104,13 +131,17 @@ class _MainScreenState extends State<MainScreen> {
                   children: [
                     Expanded(
                       child: TextField(
+                        maxLength: 50,
                         controller: myController,
                         cursorColor: Colors.black,
                         maxLines: null,
                         decoration: InputDecoration(
+                          counterText: "",
                           filled: true,
                           fillColor: Colors.grey[375],
-                          border: InputBorder.none
+                          border: InputBorder.none,
+                          hintText: "Enter new task",
+                          suffixText: "${lengthAddText}/50"
                         ),
                       ),
                     ),
