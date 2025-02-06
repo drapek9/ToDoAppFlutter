@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+// import 'package:flutter/services.dart';
+import 'package:to_to_apka/home_page/parts_content/tasks_part.dart';
+import 'package:to_to_apka/home_page/parts_content/complete_part.dart';
 
 class MainScreen extends StatefulWidget {
   const MainScreen({super.key});
@@ -10,14 +13,13 @@ class MainScreen extends StatefulWidget {
 class _MainScreenState extends State<MainScreen> {
 
   List tasks = [];
+  bool showTasks = true;
 
   @override
   Widget build(BuildContext context) {
 
     Map data = ModalRoute.of(context)?.settings.arguments as Map<dynamic, dynamic>;
     tasks = data["tasks"];
-    print("we are in!");
-    print(tasks.length);
 
     return Scaffold(
       backgroundColor: Colors.blue,
@@ -32,7 +34,11 @@ class _MainScreenState extends State<MainScreen> {
                   SizedBox(
                     width: 125,
                     child: ElevatedButton(
-                      onPressed: (){},
+                      onPressed: !showTasks ? (){
+                        setState(() {
+                          showTasks = true;
+                        });
+                        } : null,
                       style: ElevatedButton.styleFrom(
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.only(
@@ -51,7 +57,12 @@ class _MainScreenState extends State<MainScreen> {
                   SizedBox(
                     width: 125,
                     child: ElevatedButton(
-                      onPressed: (){},
+                      onPressed: showTasks ? (){
+                        setState(() {
+                          showTasks = false;
+                        });
+                      } : null,
+                      
                       style: ElevatedButton.styleFrom(
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.only(
@@ -69,20 +80,48 @@ class _MainScreenState extends State<MainScreen> {
                 ],
               ),
               Expanded(
-                child: ListView.builder(
-                  itemCount: tasks.length,
-                  itemBuilder: (context, index) {
-                    print(tasks[index].taskName);
-                    return Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 5),
-                      child: Card(
-                        child: Padding(
-                          padding: const EdgeInsets.fromLTRB(10, 10, 10, 30),
-                          child: Text(tasks[index].taskName),
+                child: IndexedStack(
+                  index: showTasks ? 0 : 1,
+                  children: [
+                    TasksPart(
+                      dataTasks: tasks),
+                    CompletePart()],
+                ),
+              ),
+              Padding(
+                padding: const EdgeInsets.fromLTRB(10, 0, 10, 10),
+                child: Row(
+                  children: [
+                    Expanded(
+                      child: TextField(
+                        cursorColor: Colors.black,
+                        maxLines: null,
+                        decoration: InputDecoration(
+                          filled: true,
+                          fillColor: Colors.grey[375],
+                          border: InputBorder.none
                         ),
                       ),
-                    );
-                  },),
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.fromLTRB(10, 0, 5, 0),
+                      child: SizedBox(
+                        width: 45,
+                        height: 45,
+                        child: ElevatedButton(
+                          style: ElevatedButton.styleFrom(
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(200), // Kulaté tlačítko
+                              ),
+                              padding: EdgeInsets.zero),
+                          onPressed: (){},
+                          child: Icon(
+                            Icons.add,
+                            color: Colors.black,)),
+                      ),
+                    )
+                  ],
+                ),
               )
             ],
           ),
