@@ -16,6 +16,7 @@ class _MainScreenState extends State<MainScreen> {
   List<CompleteTask> tasksComplete = [];
   bool showTasks = true;
   int lengthAddText = 0;
+  int selectedLevel = 1;
 
   TextEditingController myController = TextEditingController();
 
@@ -23,6 +24,33 @@ class _MainScreenState extends State<MainScreen> {
     setState(() {
       tasks.add(Task(level: level, taskName: taskName));
     });
+  }
+
+  void deleteTask (Task theTask){
+    setState(() {
+      tasks.remove(theTask);
+    });
+    
+  }
+
+  void deleteCompletedTask (CompleteTask theTask){
+    setState(() {
+      tasksComplete.remove(theTask);
+    });
+  }
+
+  void completedTask (Task theTask){
+    CompleteTask newCompleteTask = CompleteTask(taskName: theTask.taskName, level: theTask.level);
+    setState(() {
+      tasksComplete.add(newCompleteTask);
+    });
+    deleteTask(theTask);
+  }
+
+  void restoreTask (CompleteTask theTask){
+    
+    addTaskToTasks(theTask.taskName, theTask.level);
+    deleteCompletedTask(theTask);
   }
 
   @override
@@ -38,21 +66,6 @@ class _MainScreenState extends State<MainScreen> {
     Map data = ModalRoute.of(context)?.settings.arguments as Map<dynamic, dynamic>;
     tasks = data["tasks"];
     tasksComplete = data["complete_tasks"];
-
-    void deleteTask (Task theTask){
-      setState(() {
-        tasks.remove(theTask);
-      });
-      
-    }
-
-    void completedTask (Task theTask){
-      CompleteTask newCompleteTask = CompleteTask(taskName: theTask.taskName);
-      setState(() {
-        tasksComplete.add(newCompleteTask);
-      });
-      deleteTask(theTask);
-    }
 
     return Scaffold(
       backgroundColor: Colors.blue,
@@ -122,13 +135,40 @@ class _MainScreenState extends State<MainScreen> {
                       completedFunction: completedTask),
                     CompletePart(
                       dataCompleteTasks: tasksComplete,
+                      restoreFunction: restoreTask,
+                      deleteFunction: deleteCompletedTask
                       )],
                 ),
               ),
               Padding(
-                padding: const EdgeInsets.fromLTRB(10, 0, 10, 10),
+                padding: const EdgeInsets.fromLTRB(10, 0, 10, 4),
                 child: Row(
                   children: [
+                    Container(
+                      color: Colors.grey[400],
+                      child: DropdownButton<int>(
+                        dropdownColor: Colors.grey[400],
+                        underline: SizedBox(),
+                        padding: EdgeInsets.only(left: 10, right: 5),
+                        style: TextStyle(
+                          color: Colors.black,
+                          fontSize: 16
+                        ),
+                        iconEnabledColor: Colors.black,
+                        value: selectedLevel,
+                        items: List.generate(10, (index) => index + 1).map(
+                          (num) => DropdownMenuItem<int>(
+                      
+                            value: num,
+                            child: Text("$num"),
+                        )
+                        ).toList(),
+                        onChanged: (theValue){
+                          setState(() {
+                            selectedLevel = theValue!;
+                          });
+                        },),
+                    ),
                     Expanded(
                       child: TextField(
                         maxLength: 50,
@@ -141,7 +181,7 @@ class _MainScreenState extends State<MainScreen> {
                           fillColor: Colors.grey[375],
                           border: InputBorder.none,
                           hintText: "Enter new task",
-                          suffixText: "${lengthAddText}/50"
+                          suffixText: "$lengthAddText/50"
                         ),
                       ),
                     ),
@@ -160,13 +200,14 @@ class _MainScreenState extends State<MainScreen> {
                             String textFieldContent = myController.text.trim();
 
                             if (textFieldContent != ""){
-                              addTaskToTasks(textFieldContent, 10);
+                              addTaskToTasks(textFieldContent, selectedLevel);
                               myController.clear();
                             }
                           },
                           child: Icon(
                             Icons.add,
-                            color: Colors.black,)),
+                            color: Colors.black,
+                            size: 25,)),
                       ),
                     )
                   ],

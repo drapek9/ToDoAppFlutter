@@ -8,6 +8,7 @@ class Task {
 
 class CompleteTask {
   String taskName;
+  int level;
 
-  CompleteTask({required this.taskName});
+  CompleteTask({required this.taskName, required this.level});
 }

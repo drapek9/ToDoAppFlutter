@@ -62,7 +62,7 @@ class _TasksPartState extends State<TasksPart> {
                               },
                               icon: Icon(
                                 Icons.check,
-                                color: Colors.black,)),
+                                color: const Color.fromARGB(255, 37, 192, 43),)),
                             IconButton(
                               onPressed: (){
                                 widget.deleteFunction(
