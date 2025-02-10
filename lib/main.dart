@@ -3,6 +3,7 @@ import 'package:to_to_apka/loading/loading_screen.dart';
 import 'package:to_to_apka/home_page/homepage_screen.dart';
 
 void main() {
+  WidgetsFlutterBinding.ensureInitialized();
   runApp(MyApp());
 }
 

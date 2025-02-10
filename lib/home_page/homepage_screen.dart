@@ -1,7 +1,21 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:to_to_apka/home_page/parts_content/tasks_part.dart';
 import 'package:to_to_apka/home_page/parts_content/complete_part.dart';
 import 'package:to_to_apka/structures/task_logic.dart';
+import 'dart:io';
+import 'package:path_provider/path_provider.dart';
+
+Future<String> get _localPath async {
+  final directory = await getApplicationDocumentsDirectory();
+  return directory.path;
+}
+
+Future<File> get _localFile async {
+  final path = await _localPath;
+  return File('$path/data.json');
+}
 
 class MainScreen extends StatefulWidget {
   const MainScreen({super.key});
@@ -20,23 +34,40 @@ class _MainScreenState extends State<MainScreen> {
 
   TextEditingController myController = TextEditingController();
 
+  void setLocalStorage() async{
+    final file = await _localFile;
+    Map result = jsonDecode(await file.readAsString());
+    result["tasks"] = [];
+    tasks.forEach((one){
+      result["tasks"].add({"taskName": one.taskName, "level": one.level});
+    });
+    result["complete_tasks"] = [];
+    tasksComplete.forEach((one){
+      result["complete_tasks"].add({"taskName": one.taskName, "level": one.level});
+    });
+
+    file.writeAsString(jsonEncode(result));
+  }
+
   void addTaskToTasks(taskName, level){
     setState(() {
       tasks.add(Task(level: level, taskName: taskName));
     });
+    setLocalStorage();
   }
 
   void deleteTask (Task theTask){
     setState(() {
       tasks.remove(theTask);
     });
-    
+    setLocalStorage();
   }
 
   void deleteCompletedTask (CompleteTask theTask){
     setState(() {
       tasksComplete.remove(theTask);
     });
+    setLocalStorage();
   }
 
   void completedTask (Task theTask){
