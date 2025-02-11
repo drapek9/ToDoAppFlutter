@@ -84,6 +84,8 @@ class _MainScreenState extends State<MainScreen> {
     deleteCompletedTask(theTask);
   }
 
+  final page_controller = PageController();
+
   @override
   Widget build(BuildContext context) {
 
@@ -113,6 +115,7 @@ class _MainScreenState extends State<MainScreen> {
                     width: 125,
                     child: ElevatedButton(
                       onPressed: !showTasks ? (){
+                        page_controller.jumpToPage(0);
                         setState(() {
                           showTasks = true;
                         });
@@ -143,6 +146,7 @@ class _MainScreenState extends State<MainScreen> {
                     width: 125,
                     child: ElevatedButton(
                       onPressed: showTasks ? (){
+                        page_controller.jumpToPage(1);
                         setState(() {
                           showTasks = false;
                         });
@@ -171,22 +175,48 @@ class _MainScreenState extends State<MainScreen> {
                 ],
               ),
               Expanded(
-                child: IndexedStack(
-                  index: showTasks ? 0 : 1,
+                // child: IndexedStack(
+                // index: showTasks ? 0 : 1,
+                child: PageView(
+                  controller: page_controller,
+                  onPageChanged: (index) {
+                    setState(() {
+                      showTasks = index == 0;
+                    });
+                  },
                   children: [
-                    TasksPart(
-                      dataTasks: tasks,
-                      deleteFunction: deleteTask,
-                      completedFunction: completedTask),
-                    CompletePart(
+                     tasks.length > 0 ? TasksPart(
+                       dataTasks: tasks,
+                       deleteFunction: deleteTask,
+                       completedFunction: completedTask) : 
+                     Center(
+                       child:
+                       Text(
+                         "No tasks",
+                         style: TextStyle(
+                           fontSize: 22,
+                           color: Colors.black,
+                           fontWeight: FontWeight.bold
+                         ),
+                         )),
+                    tasksComplete.length > 0 ? CompletePart(
                       dataCompleteTasks: tasksComplete,
                       restoreFunction: restoreTask,
                       deleteFunction: deleteCompletedTask
-                      )],
-                ),
+                      ) : Center(
+                        child:
+                        Text(
+                          "No completed tasks",
+                          style: TextStyle(
+                            fontSize: 22,
+                            color: Colors.black,
+                            fontWeight: FontWeight.bold
+                          ),
+                          )),
+                ]),
               ),
               Padding(
-                padding: const EdgeInsets.fromLTRB(20, 0, 20, 4),
+                padding: const EdgeInsets.fromLTRB(20, 0, 20, 10),
                 child: Row(
                   children: [
                     Container(

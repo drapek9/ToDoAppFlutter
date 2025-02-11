@@ -52,7 +52,7 @@ class _LoadingScreenState extends State<LoadingScreen> {
       print("nic to nenašlo");
     }
 
-    Navigator.pushNamed(context, "/home", arguments: {
+    Navigator.pushReplacementNamed(context, "/home", arguments: {
       "tasks": data,
       "complete_tasks": dataComplete
     });
